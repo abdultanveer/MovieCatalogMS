@@ -25,7 +25,7 @@ public class MovieCatalogResource {
 	@RequestMapping("/{userId}")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 		//1. get all the rated movie ids freom the ratings service
-		UserRating ratings = restTemplate.getForObject("http://localhost:8082/ratingsdata/users/abdul", UserRating.class);
+		UserRating ratings = restTemplate.getForObject("http://ratings-service/ratingsdata/users/abdul", UserRating.class);
 		
 				
 		
@@ -34,7 +34,7 @@ public class MovieCatalogResource {
 		return ratings.getUserRatings()
 				.stream()                                                 //putting the list of items [emptying the bag on a] conveyor belt
 				.map(rating -> {
-					Movie movie = restTemplate.getForObject("http://localhost:8083/movies/"+rating.getMovieId(), Movie.class);
+					Movie movie = restTemplate.getForObject("http://movie-info-service/movies/"+rating.getMovieId(), Movie.class);
 					return new CatalogItem(movie.getMovieName(), "description"+movie.getMovieId(), rating.getRating());              				   //converting each rating item moving on the conveyor belt TO  catalogitem
    
 				})
