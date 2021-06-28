@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import dnc.sp.ms.mcatalog.RatingsServiceProxy;
 import dnc.sp.ms.mcatalog.model.CatalogItem;
 import dnc.sp.ms.mcatalog.model.Movie;
 import dnc.sp.ms.mcatalog.model.Rating;
@@ -21,13 +22,17 @@ public class MovieCatalogResource {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	 @Autowired
+	 RatingsServiceProxy proxyService;
 
 	@RequestMapping("/{userId}")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 		//1. get all the rated movie ids freom the ratings service
-		UserRating ratings = restTemplate.getForObject("http://ratings-service/ratingsdata/users/abdul", UserRating.class);
 		
-				
+		//UserRating ratings = restTemplate.getForObject("http://ratings-service/ratingsdata/users/abdul", UserRating.class);
+		
+		UserRating ratings = proxyService.getUserRating("abdul");		
 		
 		
 		//for each movie id retrieved from the previous MS call send it to MovieInfo and get movie details
